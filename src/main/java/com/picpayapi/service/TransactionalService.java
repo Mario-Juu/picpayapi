@@ -6,14 +6,11 @@ import com.picpayapi.dto.TransactionalDTO;
 import com.picpayapi.repository.TransactionalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
+import javax.naming.ServiceUnavailableException;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @Service
 public class TransactionalService {
@@ -25,14 +22,17 @@ public class TransactionalService {
     private TransactionalRepository repository;
 
     @Autowired
-    private RestTemplate restTemplate;
+    private AuthorizationService authorizationService;
 
-    public void createTransaction(TransactionalDTO transaction){
+    @Autowired
+    private NotificationService notificationService;
+
+    public Transaction createTransaction(TransactionalDTO transaction) throws ServiceUnavailableException {
         User sender = userService.findUserById(transaction.senderId());
         User receiver = userService.findUserById(transaction.receiverId());
         userService.validateTransaction(sender, transaction.value());
 
-        boolean isAuthorized = this.authorizeTransaction(sender, transaction.value());
+        boolean isAuthorized = this.authorizationService.authorizeTransaction(sender, transaction.value());
         if(!isAuthorized){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Transaction not authorized");
         }
@@ -49,10 +49,13 @@ public class TransactionalService {
         repository.save(new Transaction());
         userService.saveUser(sender);
         userService.saveUser(receiver);
+
+        this.notificationService.sendNotification(sender, "Transação realizada com sucesso");
+
+        this.notificationService.sendNotification(receiver, "Transação recebida com sucesso");
+
+        return transactionEntity;
     }
 
-    public boolean authorizeTransaction(User sender, BigDecimal value){
-        ResponseEntity<Map> authorizationResponse = restTemplate.getForEntity("https://run.mocky.io/v3/5794d450-d2e2-4412-8131-73d0293ac1cc", Map.class);
-        return authorizationResponse.getStatusCode() == HttpStatus.OK && authorizationResponse.getBody().get("message").equals("Autorizado");
-    }
+
 }
