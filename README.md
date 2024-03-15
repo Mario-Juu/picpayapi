@@ -11,7 +11,7 @@ Uma aplicação web onde são gerenciadas transações respeitando ACID feita em
 - JUnit 5
 - Mockito
 
-# Como usar
+## Como usar
 1. Abra sua IDE Java de preferência
 2. Clone o repositório
    ```sh
@@ -20,7 +20,7 @@ Uma aplicação web onde são gerenciadas transações respeitando ACID feita em
 3. Dê run na aplicação.
 4. Faça as requisições via Postman ou Insomnia.
 
-# Moldes das requisições
+## Moldes das requisições
 **POST** CreateUser (http://localhost:8080/user/)
 ```sh
 {
