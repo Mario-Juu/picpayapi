@@ -37,7 +37,7 @@ Uma aplicação web onde são gerenciadas transações respeitando ACID feita em
 **POST** CreateTransaction(http://localhost:8080/transaction)
 ```sh
 {
-	"senderId": 4,
+	"senderId": 2,
 	"receiverId": 1,
 	"value": 10
 }
