@@ -15,7 +15,7 @@ Uma aplicação web onde são gerenciadas transações respeitando ACID feita em
 1. Abra sua IDE Java de preferência
 2. Clone o repositório
    ```sh
-   git clone [https://github.com/your_username_/Project-Name.git](https://github.com/Mario-Juu/picpayapi.git)
+   git clone https://github.com/Mario-Juu/picpayapi.git
    ```
 3. Dê run na aplicação.
 4. Faça as requisições via Postman ou Insomnia.
